@@ -69,7 +69,7 @@ func JoinRoomRequestHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		msg.Client = ws
 		msg.RoomID = roomID[0]
-		log.Println(msg.Message)
+		log.Println(msg)
 		broadcast <- msg
 	}
 }

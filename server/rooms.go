@@ -2,14 +2,11 @@ package server
 
 import (
 	"log"
+	"math/rand"
 	"sync"
 	"time"
 
-	"math/rand"
-
 	"github.com/gorilla/websocket"
-	// "encoding/json"
-	// "log"
 )
 
 type Participant struct {
@@ -23,6 +20,8 @@ type RoomMap struct {
 }
 
 func (r *RoomMap) Init() {
+	r.Mutex.Lock()
+	defer r.Mutex.Unlock()
 	r.Map = make(map[string][]Participant)
 }
 
@@ -43,6 +42,7 @@ func (r *RoomMap) CreateRoom() string {
 	}
 	roomID := string(b)
 	r.Map[roomID] = []Participant{}
+
 	return roomID
 }
 
@@ -50,7 +50,7 @@ func (r *RoomMap) InsertIntoRoom(roomID string, host bool, conn *websocket.Conn)
 	r.Mutex.Lock()
 	defer r.Mutex.Unlock()
 	p := Participant{host, conn}
-	log.Println("Inserting into room with roomID: ", roomID)
+	log.Println("Inserting into Room with RoomID: ", roomID)
 	r.Map[roomID] = append(r.Map[roomID], p)
 }
 
