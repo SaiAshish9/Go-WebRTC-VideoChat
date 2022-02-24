@@ -75,18 +75,14 @@ const Room = (props) => {
   const handleOffer = async (offer) => {
     console.log("Received Offer, Creating Answer");
     peerRef.current = createPeer();
-
     await peerRef.current.setRemoteDescription(
       new RTCSessionDescription(offer)
     );
-
     userStream.current.getTracks().forEach((track) => {
       peerRef.current.addTrack(track, userStream.current);
     });
-
     const answer = await peerRef.current.createAnswer();
     await peerRef.current.setLocalDescription(answer);
-
     webSocketRef.current.send(
       JSON.stringify({ answer: peerRef.current.localDescription })
     );
@@ -95,7 +91,6 @@ const Room = (props) => {
   const callUser = () => {
     console.log("Calling Other User");
     peerRef.current = createPeer();
-
     userStream.current.getTracks().forEach((track) => {
       peerRef.current.addTrack(track, userStream.current);
     });
@@ -120,7 +115,6 @@ const Room = (props) => {
     try {
       const myOffer = await peerRef.current.createOffer();
       await peerRef.current.setLocalDescription(myOffer);
-
       webSocketRef.current.send(
         JSON.stringify({ offer: peerRef.current.localDescription })
       );
